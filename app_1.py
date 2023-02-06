@@ -1,6 +1,4 @@
-
 from random import randint
-
 General_Table = list ()
 Nimfa_Table_1 = list ()
 Nimfa_Table_0 = list ()
@@ -10,11 +8,11 @@ Adult_Table_1_m = list ()
 Adult_Table_1_n = list ()
 General_Marry_Table = list ()
 Actual_Marry_Table = list ()
-
+Servis = list ()
 #(["id", "mom_id", "dad_id", "sex", "data_birth", "data_death"])
 #(["id", "fem_id", "mal_id", "data_creat", "data_stop"])
 general_time = 0
-primary_number = 20
+primary_number = 10
 longevity = randint (15, 80)
 considering_period = 30
 min_marry_age = 16 
@@ -29,7 +27,6 @@ def creater_new_animals(number, longevity, general_time):
         data_death = data_birth + longevity
         animal = (len(General_Table), None, None, sex, data_birth, data_death)
         General_Table.append (animal)
-
         if sex == 0:
             Nimfa_Table_0.append(animal)
         else:
@@ -49,12 +46,14 @@ def marry():
         Actual_Marry_Table.append (marry)
 #можно сделать лучше. Добавить возможность переноса и мат.операций, пока напрямую сделаю
 def cleaner(Cunner_Table, const, nomber = 5):
+    #global Cunner_Table
     for index  in range (len(Cunner_Table)):
-            if Cunner_Table [index][nomber] > const:
-                Cunner_Table.pop(index)
-            index = max(index - 1, 0)
-
+        if Cunner_Table [index][nomber] < const:
+            Servis.append(Cunner_Table[index])
+    Cunner_Table = Servis
 def all_clenner():
+    global Nimfa_Table_0
+    global Nimfa_Table_1
     #смерти
     cleaner(Adult_Table_0_m, general_time, 5)
     cleaner(Adult_Table_1_m, general_time, 5)
@@ -67,14 +66,16 @@ def all_clenner():
     #выписка из малолеток и вписка во взрослых
     for index  in range (len(Nimfa_Table_1)):
         if general_time - Nimfa_Table_1 [index][4] >= min_marry_age:
-            Adult_Table_1_n.append(Nimfa_Table_1 [index])
-            Nimfa_Table_1.pop(index)
-        index = index - 1
+            Adult_Table_1_n.append(Nimfa_Table_1 [index])   
+        else:
+            Servis.append(Nimfa_Table_1 [index])
+    Nimfa_Table_1 = Servis
     for index  in range (len(Nimfa_Table_0)):
         if general_time - Nimfa_Table_0 [index][4] >= min_marry_age:
-            Adult_Table_0_n.append(Nimfa_Table_0 [index])
-            Nimfa_Table_0.pop(index)
-        index = index - 1
+            Adult_Table_0_n.append(Nimfa_Table_0 [index])   
+        else:
+            Servis.append(Nimfa_Table_0 [index])
+    Nimfa_Table_0 = Servis
 #(["id", "mom_id", "dad_id", "sex", "data_birth", "data_death"])
 #(["id", "fem_id", "mal_id", "data_creat", "data_stop"])   
 def bern_animal ():
@@ -86,41 +87,11 @@ def bern_animal ():
             Nimfa_Table_0.append(animal)
         else:
             Nimfa_Table_1.append(animal)
-
-
-
-
-
-def recursiveFun(deep = 3):
-    if deep == 0:
-        return "Cool"
-    else:
-        return recursiveFun(deep - 1)
-
-
 #Хочу красивую статистику, наверно, надо как-то разделить блоки, чтоб не слишком длинно
 #И визуализацию. Куда совать гены?
 #0, 5, A, F - для раскраски, пока только полосочки
 
-# creater_new_animals(primary_number, longevity, general_time)
-# marry()
-# cleaner(Cunner_Table, const, nomber = 5)
-# all_clenner()
-# bern_animal ()
-
 creater_new_animals(primary_number, longevity, general_time)
-
-# for index  in range (len(Nimfa_Table_1)):
-#         if general_time - Nimfa_Table_1 [index][4] >= min_marry_age:
-#             Adult_Table_1_n.append(Nimfa_Table_1 [index])
-#             Nimfa_Table_1.pop(index)
-#         index = index - 1
-#     for index  in range (len(Nimfa_Table_0)):
-#         if general_time - Nimfa_Table_0 [index][4] >= min_marry_age:
-#             Adult_Table_0_n.append(Nimfa_Table_0 [index])
-#             Nimfa_Table_0.pop(index)
-#         index = index - 1
-
 
 for index in range (considering_period):
     all_clenner()
@@ -128,14 +99,19 @@ for index in range (considering_period):
     bern_animal()
     general_time = general_time + 1
 
-print (General_Table)
-print("****************************")
-print (Nimfa_Table_0)
-print (len (Nimfa_Table_0))
-print("****************************")
-print (Nimfa_Table_1)
-print (len (Nimfa_Table_1))
-print("****************************")
-print (General_Marry_Table)
-print (general_time)
+def show_rezalt:
+    print ("General_Table ", len(General_Table))
+    print (General_Table)
+    print("****************************")
+    print ("Nimfa_Table_0 ", len (Nimfa_Table_0))
+    print (Nimfa_Table_0)
+    print("****************************")
+    print ("Nimfa_Table_1 ", len (Nimfa_Table_1))
+    print (Nimfa_Table_1)
+    print("****************************")
+    print ("Adult", len(Adult_Table_0_m) + len(Adult_Table_0_n) + len(Adult_Table_1_m) + len(Adult_Table_1_n))
+    print(Adult_Table_1_n)
+    print(Adult_Table_0_m)
+    print (Adult_Table_1_n)
+    print (Adult_Table_1_m)
 
