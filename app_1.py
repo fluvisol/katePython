@@ -9,12 +9,14 @@ Adult_Table_1_n = list ()
 General_Marry_Table = list ()
 Actual_Marry_Table = list ()
 Servis = list ()
+All_Table = (General_Table, Nimfa_Table_0, Nimfa_Table_1, Adult_Table_0_n, Adult_Table_1_n, Adult_Table_0_m, Adult_Table_1_m, General_Marry_Table, Actual_Marry_Table, Servis)
+Name = ("General_Table", "Nimfa_Table_0", "Nimfa_Table_1", "Adult_Table_0_n", "Adult_Table_1_n", "Adult_Table_0_m", "Adult_Table_1_m", "General_Marry_Table", "Actual_Marry_Table", "Servis")
 #(["id", "mom_id", "dad_id", "sex", "data_birth", "data_death"])
 #(["id", "fem_id", "mal_id", "data_creat", "data_stop"])
 general_time = 0
 primary_number = 10
 longevity = randint (15, 80)
-considering_period = 30
+considering_period = 10
 min_marry_age = 16 
 #чтоб выпадало 0 с вероятностью в 0.6, например
 chaild_nomber = randint(0,3)
@@ -44,6 +46,7 @@ def marry():
         marry = (len(General_Marry_Table), Adult_Table_0_n [index][0], Adult_Table_1_n [index][0], data_creat, data_stop)
         General_Marry_Table.append (marry)
         Actual_Marry_Table.append (marry)
+        return(General_Marry_Table)
 #можно сделать лучше. Добавить возможность переноса и мат.операций, пока напрямую сделаю
 def cleaner(Cunner_Table, const, nomber = 5):
     #global Cunner_Table
@@ -51,9 +54,8 @@ def cleaner(Cunner_Table, const, nomber = 5):
         if Cunner_Table [index][nomber] < const:
             Servis.append(Cunner_Table[index])
     Cunner_Table = Servis
-def all_clenner():
-    global Nimfa_Table_0
-    global Nimfa_Table_1
+    return Cunner_Table
+def all_clenner(Adult_Table_0_m, Adult_Table_1_m, Adult_Table_0_n, Adult_Table_1_n, Nimfa_Table_0, Nimfa_Table_1, general_time, Servis):
     #смерти
     cleaner(Adult_Table_0_m, general_time, 5)
     cleaner(Adult_Table_1_m, general_time, 5)
@@ -70,18 +72,21 @@ def all_clenner():
         else:
             Servis.append(Nimfa_Table_1 [index])
     Nimfa_Table_1 = Servis
+    Servis.clear()
     for index  in range (len(Nimfa_Table_0)):
         if general_time - Nimfa_Table_0 [index][4] >= min_marry_age:
             Adult_Table_0_n.append(Nimfa_Table_0 [index])   
         else:
             Servis.append(Nimfa_Table_0 [index])
     Nimfa_Table_0 = Servis
+    Servis.clear()
+    #return Nimfa_Table_0
 #(["id", "mom_id", "dad_id", "sex", "data_birth", "data_death"])
 #(["id", "fem_id", "mal_id", "data_creat", "data_stop"])   
 def bern_animal ():
     for index in range (len(Actual_Marry_Table)):
         sex = randint(0,2)
-        animal = tuple(len(General_Table), Actual_Marry_Table[index][2], Actual_Marry_Table[index][3], sex, general_time, longevity)
+        animal = tuple([len(General_Table), Actual_Marry_Table[index][2], Actual_Marry_Table[index][3], sex, general_time, longevity])
         General_Table.append(animal)
         if animal[3] == 0:
             Nimfa_Table_0.append(animal)
@@ -91,27 +96,18 @@ def bern_animal ():
 #И визуализацию. Куда совать гены?
 #0, 5, A, F - для раскраски, пока только полосочки
 
-creater_new_animals(primary_number, longevity, general_time)
+def show_rezalt(All_Table = All_Table, Name = Name):
+    for i in range(len (All_Table)):
+        print (Name[i], "-", len(All_Table[i]))
+        print (All_Table[i])
+        print("****************************")
 
+creater_new_animals(primary_number, longevity, general_time)
+general_time = 20
 for index in range (considering_period):
-    all_clenner()
+    all_clenner(Adult_Table_0_m, Adult_Table_1_m, Adult_Table_0_n, Adult_Table_1_n, Nimfa_Table_0, Nimfa_Table_1, general_time, Servis)
     marry()
     bern_animal()
     general_time = general_time + 1
-
-def show_rezalt:
-    print ("General_Table ", len(General_Table))
-    print (General_Table)
-    print("****************************")
-    print ("Nimfa_Table_0 ", len (Nimfa_Table_0))
-    print (Nimfa_Table_0)
-    print("****************************")
-    print ("Nimfa_Table_1 ", len (Nimfa_Table_1))
-    print (Nimfa_Table_1)
-    print("****************************")
-    print ("Adult", len(Adult_Table_0_m) + len(Adult_Table_0_n) + len(Adult_Table_1_m) + len(Adult_Table_1_n))
-    print(Adult_Table_1_n)
-    print(Adult_Table_0_m)
-    print (Adult_Table_1_n)
-    print (Adult_Table_1_m)
+show_rezalt(All_Table)
 
