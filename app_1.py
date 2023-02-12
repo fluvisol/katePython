@@ -15,18 +15,19 @@ Name = ("General_Table", "Nimfa_Table_0", "Nimfa_Table_1", "Adult_Table_0_n", "A
 #(["id", "fem_id", "mal_id", "data_creat", "data_stop"])
 general_time = 0
 primary_number = 10
-longevity = randint (15, 80)
+min_deaf_age = 10
+max_deaf_age = 70
 considering_period = 10
 min_marry_age = 16 
 #чтоб выпадало 0 с вероятностью в 0.6, например
 chaild_nomber = randint(0,3)
 #надо сделать возможным добавлять любой пол, для этого разобраться со значениями по умолчанию
-def creater_new_animals(number, longevity, general_time):
+def creater_new_animals(number, min_deaf_age, max_deaf_age, general_time):
     for index  in range(general_time, number, 1):
         sex = randint(0, 1)
         #завести в переменную
         data_birth = general_time + randint(0, 25)
-        data_death = data_birth + longevity
+        data_death = data_birth + randint(min_deaf_age, max_deaf_age + 1)
         animal = (len(General_Table), None, None, sex, data_birth, data_death)
         General_Table.append (animal)
         if sex == 0:
@@ -35,10 +36,8 @@ def creater_new_animals(number, longevity, general_time):
             Nimfa_Table_1.append(animal)
 #(["id", "mom_id", "dad_id", "sex", "data_birth", "data_death"])
 #(["id", "fem_id", "mal_id", "data_creat", "data_stop"])       
-def marry():
-    #это очень медленное и работает c одним полом
-    #нужно уменьшить количество браков
-    #как бы их перемешать.... а то рандом замедлять будет 
+def marry(Adult_Table_0_n = Adult_Table_0_n, Adult_Table_1_n = Adult_Table_1_n, Adult_Table_0_m = Adult_Table_0_m, Adult_Table_1_m = Adult_Table_1_m, General_Marry_Table = General_Marry_Table, Actual_Marry_Table = Actual_Marry_Table):
+    #нужно уменьшить количество браков и чтоб были случайными
     for index  in range (min(len(Adult_Table_1_n), len(Adult_Table_0_n))):
         sex = 0
         data_creat = general_time
@@ -46,7 +45,6 @@ def marry():
         marry = (len(General_Marry_Table), Adult_Table_0_n [index][0], Adult_Table_1_n [index][0], data_creat, data_stop)
         General_Marry_Table.append (marry)
         Actual_Marry_Table.append (marry)
-        return(General_Marry_Table)
 #можно сделать лучше. Добавить возможность переноса и мат.операций, пока напрямую сделаю
 def cleaner(Cunner_Table, const, nomber = 5):
     #global Cunner_Table
@@ -86,7 +84,7 @@ def all_clenner(Adult_Table_0_m, Adult_Table_1_m, Adult_Table_0_n, Adult_Table_1
 def bern_animal ():
     for index in range (len(Actual_Marry_Table)):
         sex = randint(0,2)
-        animal = tuple([len(General_Table), Actual_Marry_Table[index][2], Actual_Marry_Table[index][3], sex, general_time, longevity])
+        animal = tuple([len(General_Table), Actual_Marry_Table[index][2], Actual_Marry_Table[index][3], sex, general_time, randint (min_deaf_age, max_deaf_age)])
         General_Table.append(animal)
         if animal[3] == 0:
             Nimfa_Table_0.append(animal)
@@ -102,7 +100,7 @@ def show_rezalt(All_Table = All_Table, Name = Name):
         print (All_Table[i])
         print("****************************")
 
-creater_new_animals(primary_number, longevity, general_time)
+creater_new_animals(primary_number, max_deaf_age, max_deaf_age, general_time)
 general_time = 20
 for index in range (considering_period):
     all_clenner(Adult_Table_0_m, Adult_Table_1_m, Adult_Table_0_n, Adult_Table_1_n, Nimfa_Table_0, Nimfa_Table_1, general_time, Servis)
