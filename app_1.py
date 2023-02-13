@@ -13,22 +13,23 @@ All_Table = (General_Table, Nimfa_Table_0, Nimfa_Table_1, Adult_Table_0_n, Adult
 Name = ("General_Table", "Nimfa_Table_0", "Nimfa_Table_1", "Adult_Table_0_n", "Adult_Table_1_n", "Adult_Table_0_m", "Adult_Table_1_m", "General_Marry_Table", "Actual_Marry_Table", "Servis")
 #(["id", "mom_id", "dad_id", "sex", "data_birth", "data_death"])
 #(["id", "fem_id", "mal_id", "data_creat", "data_stop"])
-general_time = 0
+general_time = 20
 primary_number = 10
 min_deaf_age = 10
 max_deaf_age = 70
 considering_period = 10
 min_marry_age = 16 
 #чтоб выпадало 0 с вероятностью в 0.6, например
-chaild_nomber = randint(0,3)
+chaild_nomber = randint(0,1)
 #надо сделать возможным добавлять любой пол, для этого разобраться со значениями по умолчанию
 def creater_new_animals(number, min_deaf_age, max_deaf_age, general_time):
-    for index  in range(general_time, number, 1):
+    for i in range(number):
         sex = randint(0, 1)
         #завести в переменную
         data_birth = general_time + randint(0, 25)
         data_death = data_birth + randint(min_deaf_age, max_deaf_age + 1)
         animal = (len(General_Table), None, None, sex, data_birth, data_death)
+        print(animal)
         General_Table.append (animal)
         if sex == 0:
             Nimfa_Table_0.append(animal)
@@ -53,7 +54,7 @@ def cleaner(Cunner_Table, const, nomber = 5):
             Servis.append(Cunner_Table[index])
     Cunner_Table = Servis
     return Cunner_Table
-def all_clenner(Adult_Table_0_m, Adult_Table_1_m, Adult_Table_0_n, Adult_Table_1_n, Nimfa_Table_0, Nimfa_Table_1, general_time, Servis):
+def all_clenner(Adult_Table_0_m = Adult_Table_0_m, Adult_Table_1_m = Adult_Table_1_m, Adult_Table_0_n = Adult_Table_0_n, Adult_Table_1_n = Adult_Table_1_n, Nimfa_Table_0 = Nimfa_Table_0, Nimfa_Table_1 = Nimfa_Table_1, general_time = general_time, Servis = Servis, Actual_Marry_Table = Actual_Marry_Table):
     #смерти
     cleaner(Adult_Table_0_m, general_time, 5)
     cleaner(Adult_Table_1_m, general_time, 5)
@@ -64,20 +65,24 @@ def all_clenner(Adult_Table_0_m, Adult_Table_1_m, Adult_Table_0_n, Adult_Table_1
     #разводы
     cleaner(Actual_Marry_Table, general_time, 4)
     #выписка из малолеток и вписка во взрослых
-    for index  in range (len(Nimfa_Table_1)):
-        if general_time - Nimfa_Table_1 [index][4] >= min_marry_age:
-            Adult_Table_1_n.append(Nimfa_Table_1 [index])   
-        else:
-            Servis.append(Nimfa_Table_1 [index])
-    Nimfa_Table_1 = Servis
-    Servis.clear()
     for index  in range (len(Nimfa_Table_0)):
         if general_time - Nimfa_Table_0 [index][4] >= min_marry_age:
             Adult_Table_0_n.append(Nimfa_Table_0 [index])   
         else:
             Servis.append(Nimfa_Table_0 [index])
+    for index  in range (len(Nimfa_Table_1)):
+        print("start work")
+        if general_time - Nimfa_Table_1 [index][4] >= min_marry_age:
+            Adult_Table_1_n.append(Nimfa_Table_1 [index])   
+        else:
+            Servis.append(Nimfa_Table_1 [index])
+            print(Servis)
+    Nimfa_Table_1 = Servis
+    Servis.clear()
+  
     Nimfa_Table_0 = Servis
     Servis.clear()
+    #нужно сделать 
     #return Nimfa_Table_0
 #(["id", "mom_id", "dad_id", "sex", "data_birth", "data_death"])
 #(["id", "fem_id", "mal_id", "data_creat", "data_stop"])   
@@ -100,12 +105,19 @@ def show_rezalt(All_Table = All_Table, Name = Name):
         print (All_Table[i])
         print("****************************")
 
+#с это момента выполнение
+
+
 creater_new_animals(primary_number, max_deaf_age, max_deaf_age, general_time)
-general_time = 20
+print(General_Table)
+print("#######################################")
 for index in range (considering_period):
-    all_clenner(Adult_Table_0_m, Adult_Table_1_m, Adult_Table_0_n, Adult_Table_1_n, Nimfa_Table_0, Nimfa_Table_1, general_time, Servis)
+    print(general_time)
+    all_clenner()
     marry()
     bern_animal()
     general_time = general_time + 1
 show_rezalt(All_Table)
+
+
 
