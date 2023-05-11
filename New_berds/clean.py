@@ -11,11 +11,11 @@ servis = list()
 marry_age = 3
 age = 15
 data = 0
-general_time = 1
 add_to_mary = 100
 #количество детей/челочисленное, как часто, не забыть вписать ноль!
-distribution_children = (0, 1, 2, 3, 60, 20, 3, 1)
-accidental_deaths = 0.1
+#distribution_children = (0, 1, 2, 3, 60, 20, 3, 1)
+distribution_children = (0, 1, 60, 20)
+accidental_deaths = 0.0005
 #old_deaths = 0.3
 #infant_deaths = -0.1* animal_age ^(2)+30
 
@@ -44,17 +44,17 @@ def all_deaths(live_animals = live_animals):
         #сделать детскую смртность и старческую, для этого подключить параболу, матобработка
 
 #разобраться с глобальными переменными
-def birth_animal(marry_id, general_time):
+def birth_animal(marry_id):
     animals.append([len(animals), random.choice (["M", "W"]), general_time, general_time + age, marry [marry_id][1], marry [marry_id][2], "N"])
     live_animals.append(animals[-1])
 
 def delate_die_animals():
-    servis =[live for live in live_animals if live[3] <= general_time]
+    servis =[live for live in live_animals if live[3] >= general_time]
     live_animals.clear()
     live_animals.extend(servis)
 
 def delate_die_marry():
-    servis =[live for live in live_marry if live_animals [live[1]] [3] and live_animals [live[2]] [3]  <= general_time]
+    servis =[live for live in live_marry if live_animals [live[1]] [3] and live_animals [live[2]] [3] >= general_time]
     live_marry.clear()
     live_marry.extend(servis)
 
@@ -63,14 +63,14 @@ def temporarily_marriage(live_animals = live_animals):
     for animals in live_animals:
         random.choices ([marry_creater(animals[0]), None], weights= [1, 10])
 
-def normal_fertility(marry_id, distribution_children, general_time):
+def normal_fertility(marry_id, distribution_children):
     nomber_baby = random.choices(tuple(distribution_children[0:(len(distribution_children)//2)]), weights=tuple(distribution_children[(len(distribution_children)//2):]))
     for __ in range(len(nomber_baby)):
-        birth_animal(marry_id, general_time)
+        birth_animal(marry_id)
 
-def all_normal_fertility(distribution_children = distribution_children, general_time=general_time):
+def all_normal_fertility(distribution_children = distribution_children):
     for marry_nomber in range (len(live_marry)):
-        normal_fertility(marry_nomber, distribution_children, general_time)
+        normal_fertility(marry_nomber, distribution_children)
 
 
 # редкие функции
@@ -88,11 +88,12 @@ def all_normal_fertility(distribution_children = distribution_children, general_
 
 
 print ("new"*20)
+general_time = 1
 create_animals (10, 0)
 general_time = 4
 
 
-for i in range (15):
+for i in range (18):
     print(general_time)
     all_deaths()
     delate_die_animals()
@@ -101,10 +102,20 @@ for i in range (15):
     all_normal_fertility()
     general_time = general_time +1
 
-for i in animals:
-    print (i)
-for i in marry:
+# print ("animals")
+# for i in animals:
+#     print (i)
+
+# print ("marry")    
+# for i in marry:
+#     print (i)
+
+print ("live_animals")    
+for i in live_animals:
     print (i)
 
+print ("live_marry")    
+for i in live_marry:
+    print (i)
 
 
